@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Страница не найдена — Перемена{% endblock %}
+{% block content %}
+<div class="empty">
+  <h1>404 — страница не найдена</h1>
+  <p>Возможно, товар сняли с продажи или ссылка устарела.</p>
+  <a class="btn" href="{% url 'catalog:product_list' %}">В каталог</a>
+</div>
+{% endblock %}

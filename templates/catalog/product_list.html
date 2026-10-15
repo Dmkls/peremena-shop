@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{% if current_category %}{{ current_category.name }}{% else %}Каталог{% endif %} — Перемена{% endblock %}
+{% block content %}
+<h1>{% if current_category %}{{ current_category.name }}{% else %}Каталог{% endif %}</h1>
+
+<div class="catalog">
+  <form class="filters" method="get" id="filters">
+    <div>
+      <h3>Категории</h3>
+      <ul class="cat-list">
+        <li><a href="?{% if request.GET.q %}q={{ request.GET.q|urlencode }}{% endif %}" class="{% if not current_category %}on{% endif %}">Все товары</a></li>
+        {% for c in nav_categories %}
+          <li><a href="?category={{ c.slug }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}" class="{% if current_category == c %}on{% endif %}">{{ c.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% if current_category %}<input type="hidden" name="category" value="{{ current_category.slug }}">{% endif %}
+    <div>
+      <h3>Поиск</h3>
+      <input class="input" type="search" name="q" value="{{ form.q.value|default:'' }}" placeholder="Название или описание">
+    </div>
+    <div>
+      <h3>Цена, ₽</h3>
+      <div class="price-range">
+        <input class="input" type="number" name="price_min" min="0" value="{{ form.price_min.value|default:'' }}" placeholder="от">
+        <input class="input" type="number" name="price_max" min="0" value="{{ form.price_max.value|default:'' }}" placeholder="до">
+      </div>
+    </div>
+    <label><input type="checkbox" name="in_stock" value="on" {% if form.in_stock.value %}checked{% endif %}> Только в наличии</label>
+    <div class="form-actions">
+      <button class="btn" type="submit">Применить</button>
+      <a href="{% url 'catalog:product_list' %}">Сбросить</a>
+    </div>
+  </form>
+
+  <section>
+    <div class="toolbar">
+      <span class="muted">Найдено: {{ page.paginator.count }}</span>
+      <select class="sort-select" name="sort" form="filters" data-autosubmit aria-label="Сортировка">
+        {% for value, label in form.fields.sort.choices %}
+          <option value="{{ value }}" {% if form.sort.value == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if page.object_list %}
+      <div class="grid">{% for product in page.object_list %}{% include "includes/product_card.html" %}{% endfor %}</div>
+      {% include "includes/pagination.html" %}
+    {% else %}
+      <div class="empty">Ничего не нашлось. Попробуйте изменить условия поиска.</div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

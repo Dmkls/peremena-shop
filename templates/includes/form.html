@@ -1,0 +1,17 @@
+{# Универсальный вывод полей формы: {% include "includes/form.html" with form=form %} #}
+{% if form.non_field_errors %}
+  <ul class="form-errors">{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul>
+{% endif %}
+{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+{% for field in form.visible_fields %}
+  <div class="field{% if field.errors %} has-error{% endif %}">
+    {% if field.widget_type == "checkbox" %}
+      <label>{{ field }} {{ field.label }}</label>
+    {% else %}
+      {{ field.label_tag }}
+      {{ field }}
+    {% endif %}
+    {% if field.help_text %}<div class="help">{{ field.help_text|safe }}</div>{% endif %}
+    {% if field.errors %}<ul class="errors">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+{% endfor %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load shop_tags %}
+{% block title %}Оформление заказа — Перемена{% endblock %}
+{% block content %}
+<h1>Оформление заказа</h1>
+<div class="two-col">
+  <form class="form" method="post">{% csrf_token %}
+    {% include "includes/form.html" %}
+    <div class="form-actions">
+      <button class="btn" type="submit">Подтвердить заказ</button>
+      <a href="{% url 'orders:cart' %}">Вернуться в корзину</a>
+    </div>
+  </form>
+
+  <aside class="panel">
+    <h3>Ваш заказ</h3>
+    <table class="table">
+      {% for item in items %}
+        <tr><td>{{ item.product.name }} × {{ item.quantity }}</td><td class="num">{{ item.total|rub }}</td></tr>
+      {% endfor %}
+      <tr><th>Итого</th><th class="num">{{ total|rub }}</th></tr>
+    </table>
+    <p class="muted">Оплата при получении — картой или наличными.</p>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash %}
+<h1>Удалить «{{ object }}»?</h1>
+<p class="muted">Это действие нельзя отменить.</p>
+<form class="form-actions" method="post">{% csrf_token %}
+  <button class="btn btn-danger" type="submit">Да, удалить</button>
+  <a href="{% url cancel_url %}">Отмена</a>
+</form>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Управление — Перемена{% endblock %}
+{% block content %}
+{% with section=request.resolver_match.url_name %}
+<div class="dash">
+  <nav class="dash-nav">
+    <a href="{% url 'dashboard:index' %}" class="{% if section == 'index' %}on{% endif %}">Обзор</a>
+    <a href="{% url 'dashboard:product_list' %}" class="{% if 'product' in section %}on{% endif %}">Товары</a>
+    <a href="{% url 'dashboard:category_list' %}" class="{% if 'category' in section %}on{% endif %}">Категории</a>
+    <a href="{% url 'dashboard:order_list' %}" class="{% if 'order' in section %}on{% endif %}">Заказы</a>
+  </nav>
+  <section>{% block dash %}{% endblock %}</section>
+</div>
+{% endwith %}
+{% endblock %}

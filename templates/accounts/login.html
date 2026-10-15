@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Вход — Перемена{% endblock %}
+{% block content %}
+<div class="auth">
+  <h1>Вход</h1>
+  <form class="form" method="post">{% csrf_token %}
+    {% include "includes/form.html" %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="form-actions">
+      <button class="btn" type="submit">Войти</button>
+      <p class="form-alt">Нет аккаунта? <a href="{% url 'accounts:signup' %}">Зарегистрируйтесь</a></p>
+    </div>
+  </form>
+</div>
+{% endblock %}

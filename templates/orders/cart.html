@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load shop_tags %}
+{% block title %}Корзина — Перемена{% endblock %}
+{% block content %}
+<h1>Корзина</h1>
+{% if items %}
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th></th><th>Товар</th><th class="num">Цена</th><th>Количество</th><th class="num">Сумма</th><th></th></tr></thead>
+      <tbody>
+      {% for item in items %}
+        <tr>
+          <td><div class="thumb">{% if item.product.image %}<img src="{{ item.product.image.url }}" alt="">{% else %}{{ item.product.name|first }}{% endif %}</div></td>
+          <td><a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a><br><span class="muted">{{ item.product.category.name }}</span></td>
+          <td class="num">{{ item.product.price|rub }}</td>
+          <td>
+            <form action="{% url 'orders:cart_update' item.pk %}" method="post">{% csrf_token %}
+              <input class="input" type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.product.stock }}" data-autosubmit aria-label="Количество">
+              <noscript><button class="btn btn-sm btn-ghost" type="submit">OK</button></noscript>
+            </form>
+          </td>
+          <td class="num">{{ item.total|rub }}</td>
+          <td>
+            <form action="{% url 'orders:cart_remove' item.pk %}" method="post">{% csrf_token %}
+              <button class="btn-link" type="submit">Удалить</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="summary">
+    <span>Итого: <b>{{ total|rub }}</b></span>
+    <a class="btn" href="{% url 'orders:checkout' %}">Оформить заказ</a>
+  </div>
+{% else %}
+  <div class="empty">
+    <p>В корзине пока пусто.</p>
+    <a class="btn" href="{% url 'catalog:product_list' %}">Перейти в каталог</a>
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+.env
+
+# IDE / OS
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+
+# Материалы практики, не часть приложения
+отчёты/
+new_images/
+Летняя_практика.docx

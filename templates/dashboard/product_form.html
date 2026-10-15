@@ -1,0 +1,13 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash %}
+<nav class="breadcrumbs"><a href="{% url 'dashboard:product_list' %}">Товары</a> / {% if product %}{{ product.name }}{% else %}Новый товар{% endif %}</nav>
+<h1>{% if product %}Редактирование товара{% else %}Новый товар{% endif %}</h1>
+{% if product.image %}<img src="{{ product.image.url }}" alt="" style="width:160px;border-radius:12px;margin-bottom:16px">{% endif %}
+<form class="form" method="post" enctype="multipart/form-data">{% csrf_token %}
+  {% include "includes/form.html" %}
+  <div class="form-actions">
+    <button class="btn" type="submit">Сохранить</button>
+    <a href="{% url 'dashboard:product_list' %}">Отмена</a>
+  </div>
+</form>
+{% endblock %}

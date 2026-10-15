@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Снова в школу</p>
+    <h1>Всё для учёбы — в одном месте</h1>
+    <p class="lead">Тетради, ручки, учебники, рюкзаки и техника. Оформите заказ онлайн — мы соберём его и доставим.</p>
+    <p><a class="btn" href="{% url 'catalog:product_list' %}">Перейти в каталог</a></p>
+  </div>
+  <img class="hero-art" src="{% static 'img/hero.jpg' %}" alt="" width="1000" height="1000">
+</section>
+
+{% if nav_categories %}
+<h2>Категории</h2>
+<div class="cat-tiles">
+  {% for c in nav_categories %}<a class="cat-tile" href="{{ c.get_absolute_url }}">{{ c.name }}</a>{% endfor %}
+</div>
+{% endif %}
+
+<div class="section-head">
+  <h2>Новинки</h2>
+  <a href="{% url 'catalog:product_list' %}">Весь каталог →</a>
+</div>
+{% if products %}
+  <div class="grid">{% for product in products %}{% include "includes/product_card.html" %}{% endfor %}</div>
+{% else %}
+  <div class="empty">Товаров пока нет. Администратор может добавить их в разделе «Управление».</div>
+{% endif %}
+{% endblock %}

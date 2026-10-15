@@ -1,0 +1,25 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash %}
+<div class="section-head">
+  <h1>Категории</h1>
+  <a class="btn" href="{% url 'dashboard:category_create' %}">+ Добавить категорию</a>
+</div>
+<table class="table">
+  <thead><tr><th>Название</th><th>Адрес</th><th class="num">Товаров</th><th></th></tr></thead>
+  <tbody>
+  {% for c in categories %}
+    <tr>
+      <td><a href="{{ c.get_absolute_url }}">{{ c.name }}</a></td>
+      <td class="muted">{{ c.slug }}</td>
+      <td class="num">{{ c.products_count }}</td>
+      <td class="num">
+        <a class="btn btn-sm btn-ghost" href="{% url 'dashboard:category_edit' c.pk %}">Изменить</a>
+        <a class="btn btn-sm btn-ghost" href="{% url 'dashboard:category_delete' c.pk %}">Удалить</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4" class="muted">Категорий пока нет.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

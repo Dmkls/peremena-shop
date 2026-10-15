@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Доступ запрещён — Перемена{% endblock %}
+{% block content %}
+<div class="empty">
+  <h1>403 — доступ запрещён</h1>
+  <p>Эта страница доступна только администраторам магазина.</p>
+  <a class="btn" href="{% url 'catalog:home' %}">На главную</a>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load shop_tags %}
+{% if page.has_other_pages %}
+<nav class="pagination" aria-label="Страницы">
+  {% if page.has_previous %}<a href="{% url_with page=page.previous_page_number %}">←</a>{% endif %}
+  {% for n in page.paginator.page_range %}
+    {% if n == page.number %}<span class="current">{{ n }}</span>
+    {% else %}<a href="{% url_with page=n %}">{{ n }}</a>{% endif %}
+  {% endfor %}
+  {% if page.has_next %}<a href="{% url_with page=page.next_page_number %}">→</a>{% endif %}
+</nav>
+{% endif %}

@@ -1,0 +1,34 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load shop_tags %}
+{% block dash %}
+<h1>Обзор</h1>
+<div class="stats">
+  <a class="stat" href="{% url 'dashboard:order_list' %}?status=new"><b>{{ new_orders_count }}</b>новых заказов</a>
+  <a class="stat" href="{% url 'dashboard:product_list' %}"><b>{{ products_count }}</b>товаров</a>
+  <a class="stat" href="{% url 'dashboard:category_list' %}"><b>{{ categories_count }}</b>категорий</a>
+</div>
+
+<div class="two-col">
+  <div>
+    <h2>Последние заказы</h2>
+    {% if recent_orders %}
+      <table class="table">
+        {% for order in recent_orders %}
+          <tr>
+            <td><a href="{% url 'dashboard:order_detail' order.pk %}">№{{ order.pk }}</a></td>
+            <td>{{ order.user.username }}</td>
+            <td>{{ order.created_at|date:"d.m H:i" }}</td>
+            <td><span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}<p class="muted">Заказов пока нет.</p>{% endif %}
+  </div>
+  <aside class="panel">
+    <h3>Заканчиваются</h3>
+    {% for p in low_stock %}
+      <p><a href="{% url 'dashboard:product_edit' p.pk %}">{{ p.name }}</a> — <b>{{ p.stock }}</b> шт.</p>
+    {% empty %}<p class="muted">Всего достаточно.</p>{% endfor %}
+  </aside>
+</div>
+{% endblock %}

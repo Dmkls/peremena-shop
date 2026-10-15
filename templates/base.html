@@ -1,0 +1,61 @@
+{% load static %}<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Перемена — магазин учебных товаров{% endblock %}</title>
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <script src="{% static 'js/main.js' %}" defer></script>
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap">
+    <a class="logo" href="{% url 'catalog:home' %}"><span class="logo-mark">✎</span>Перемена</a>
+    <nav class="nav">
+      <a href="{% url 'catalog:product_list' %}">Каталог</a>
+      {% if user.is_staff %}<a href="{% url 'dashboard:index' %}">Управление</a>{% endif %}
+    </nav>
+    <form class="search" action="{% url 'catalog:product_list' %}" method="get" role="search">
+      <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Найти тетрадь, ручку, рюкзак…" aria-label="Поиск">
+      <button class="btn" type="submit">Найти</button>
+    </form>
+    <div class="user-nav">
+      {% if user.is_authenticated %}
+        <a href="{% url 'orders:order_list' %}">Мои заказы</a>
+        <a href="{% url 'orders:cart' %}">Корзина <span class="badge" data-cart-count>{{ cart_count }}</span></a>
+        <form action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}
+          <button class="btn-link" type="submit" title="{{ user.username }}">Выйти</button>
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}">Войти</a>
+        <a class="btn btn-sm" href="{% url 'accounts:signup' %}">Регистрация</a>
+      {% endif %}
+    </div>
+  </div>
+</header>
+
+<main class="page">
+  <div class="wrap">
+    {% if messages %}
+      <ul class="messages">
+        {% for m in messages %}<li class="msg msg-{{ m.tags }}">{{ m }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer class="ftr">
+  <div class="wrap">
+    <span>«Перемена» — магазин учебных товаров · © {% now "Y" %}</span>
+    <span>
+      <a href="{% url 'catalog:info' 'delivery' %}">Доставка</a> ·
+      <a href="{% url 'catalog:info' 'payment' %}">Оплата</a> ·
+      <a href="{% url 'catalog:info' 'returns' %}">Возврат</a>
+    </span>
+  </div>
+</footer>
+</body>
+</html>

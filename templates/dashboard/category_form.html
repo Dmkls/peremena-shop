@@ -1,0 +1,12 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash %}
+<nav class="breadcrumbs"><a href="{% url 'dashboard:category_list' %}">Категории</a> / {% if category %}{{ category.name }}{% else %}Новая категория{% endif %}</nav>
+<h1>{% if category %}Редактирование категории{% else %}Новая категория{% endif %}</h1>
+<form class="form" method="post">{% csrf_token %}
+  {% include "includes/form.html" %}
+  <div class="form-actions">
+    <button class="btn" type="submit">Сохранить</button>
+    <a href="{% url 'dashboard:category_list' %}">Отмена</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load shop_tags %}
+{% block title %}{{ product.name }} — Перемена{% endblock %}
+{% block content %}
+<nav class="breadcrumbs">
+  <a href="{% url 'catalog:product_list' %}">Каталог</a> /
+  <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a> /
+  {{ product.name }}
+</nav>
+
+<div class="product">
+  <div class="card-pic">
+    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+    {% else %}<span class="ph">{{ product.name|first }}</span>{% endif %}
+  </div>
+
+  <div>
+    <h1>{{ product.name }}</h1>
+    {% if not product.is_active %}<p class="msg msg-warning">Товар скрыт из каталога — его видят только администраторы.</p>{% endif %}
+    <div class="product-price">{{ product.price|rub }}</div>
+    <p class="muted">
+      {% if product.in_stock %}В наличии: {{ product.stock }} шт.{% else %}Нет в наличии{% endif %}
+    </p>
+
+    {% if product.in_stock %}
+      {% if user.is_authenticated %}
+        <form class="product-buy" action="{% url 'orders:cart_add' product.pk %}" method="post" data-cart-add="quiet">{% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <input class="input" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" aria-label="Количество">
+          <button class="btn" type="submit">Добавить в корзину</button>
+        </form>
+      {% else %}
+        <p class="product-buy">
+          <a class="btn" href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}">Войдите, чтобы купить</a>
+        </p>
+      {% endif %}
+    {% endif %}
+
+    {% if user.is_staff %}
+      <p><a href="{% url 'dashboard:product_edit' product.pk %}">✎ Редактировать товар</a></p>
+    {% endif %}
+
+    <h3>Описание</h3>
+    <div>{{ product.description|linebreaks|default:"<p class='muted'>Описание пока не добавлено.</p>" }}</div>
+    <p class="muted">Категория: <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></p>
+  </div>
+</div>
+
+{% if related %}
+  <h2 style="margin-top:48px">Ещё в категории «{{ product.category.name }}»</h2>
+  <div class="grid">{% for product in related %}{% include "includes/product_card.html" %}{% endfor %}</div>
+{% endif %}
+{% endblock %}

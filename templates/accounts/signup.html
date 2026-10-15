@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — Перемена{% endblock %}
+{% block content %}
+<div class="auth">
+  <h1>Регистрация</h1>
+  <form class="form" method="post">{% csrf_token %}
+    {% include "includes/form.html" %}
+    <div class="form-actions">
+      <button class="btn" type="submit">Создать аккаунт</button>
+    </div>
+    <p class="form-alt">Уже есть аккаунт? <a href="{% url 'accounts:login' %}">Войти</a></p>
+  </form>
+</div>
+{% endblock %}

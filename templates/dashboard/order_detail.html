@@ -1,0 +1,20 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block dash %}
+<nav class="breadcrumbs"><a href="{% url 'dashboard:order_list' %}">Заказы</a> / №{{ order.pk }}</nav>
+<h1>Заказ №{{ order.pk }} <span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></h1>
+<p class="muted">Покупатель: {{ order.user.username }}{% if order.user.email %} · {{ order.user.email }}{% endif %}</p>
+
+<form class="toolbar" action="{% url 'dashboard:order_set_status' order.pk %}" method="post">{% csrf_token %}
+  <div class="form-actions">
+    <label for="{{ form.status.id_for_label }}"><b>Статус:</b></label>
+    <select class="input" style="width:auto" name="status" id="{{ form.status.id_for_label }}">
+      {% for value, label in form.fields.status.choices %}
+        <option value="{{ value }}" {% if value == order.status %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn" type="submit">Сохранить статус</button>
+  </div>
+</form>
+
+{% include "orders/_order_body.html" %}
+{% endblock %}

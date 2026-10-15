@@ -1,0 +1,31 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load shop_tags %}
+{% block dash %}
+<h1>Заказы</h1>
+<div class="chips">
+  <a href="{% url 'dashboard:order_list' %}" class="{% if not current_status %}on{% endif %}">Все</a>
+  {% for value, label in statuses %}
+    <a href="?status={{ value }}" class="{% if current_status == value %}on{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Номер</th><th>Дата</th><th>Покупатель</th><th>Телефон</th><th class="num">Сумма</th><th>Статус</th></tr></thead>
+    <tbody>
+    {% for order in page.object_list %}
+      <tr>
+        <td><a href="{% url 'dashboard:order_detail' order.pk %}">№{{ order.pk }}</a></td>
+        <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+        <td>{{ order.full_name }}<br><span class="muted">{{ order.user.username }}</span></td>
+        <td>{{ order.phone }}</td>
+        <td class="num">{{ order.total|rub }}</td>
+        <td><span class="status status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="muted">Заказов нет.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "includes/pagination.html" %}
+{% endblock %}

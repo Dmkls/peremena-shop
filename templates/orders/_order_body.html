@@ -1,0 +1,31 @@
+{% load shop_tags %}
+{# Состав заказа и данные доставки — общий кусок для покупателя и администратора. #}
+<div class="two-col">
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Товар</th><th class="num">Цена</th><th class="num">Кол-во</th><th class="num">Сумма</th></tr></thead>
+      <tbody>
+      {% for item in order.items.all %}
+        <tr>
+          <td>{% if item.product %}<a href="{{ item.product.get_absolute_url }}">{{ item.product_name }}</a>{% else %}{{ item.product_name }}{% endif %}</td>
+          <td class="num">{{ item.price|rub }}</td>
+          <td class="num">{{ item.quantity }}</td>
+          <td class="num">{{ item.total|rub }}</td>
+        </tr>
+      {% endfor %}
+      <tr><th colspan="3">Итого</th><th class="num">{{ order.total|rub }}</th></tr>
+      </tbody>
+    </table>
+  </div>
+  <aside class="panel">
+    <h3>Доставка</h3>
+    <dl class="kv">
+      <dt>Получатель</dt><dd>{{ order.full_name }}</dd>
+      <dt>Телефон</dt><dd>{{ order.phone }}</dd>
+      <dt>Адрес</dt><dd>{{ order.address }}</dd>
+      {% if order.comment %}<dt>Комментарий</dt><dd>{{ order.comment|linebreaksbr }}</dd>{% endif %}
+      <dt>Создан</dt><dd>{{ order.created_at|date:"d.m.Y H:i" }}</dd>
+      <dt>Обновлён</dt><dd>{{ order.updated_at|date:"d.m.Y H:i" }}</dd>
+    </dl>
+  </aside>
+</div>
